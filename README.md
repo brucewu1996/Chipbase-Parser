@@ -16,7 +16,7 @@ The parser for [chipbase 3.0](https://rnasysu.com/chipbase3/) transcription fact
         4. sample_id = Chipbase experiment ID. [material/chipbase_experiment.xlsx](https://github.com/brucewu1996/Chipbase-Parser/blob/main/material/chipbase_experiment.xlsx)
         5. upstream
         6. downstream
-    >Notice !! The tf_name / protein_name of chipbase 3.0 may contain multiple tf/proteins separated by '-'. (e.g. RPL17-C18orf32) Those tf/protein record in material/dashed_tf_list.txt
+    > Notice !! The tf_name / protein_name of chipbase 3.0 may contain multiple tf/proteins separated by '-'. (e.g. RPL17-C18orf32) Those tf/protein record in material/dashed_tf_list.txt
 ---
 ### Program logic
 1. Use request & urllib to create the corresponding download url.

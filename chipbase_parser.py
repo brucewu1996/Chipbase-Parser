@@ -1,9 +1,9 @@
 import pandas as pd 
 import os,re,time,datetime,glob
 import urllib.request,requests
-import asyncio,aiohttp,aiofiles,subprocess
+#import asyncio,aiohttp,aiofiles,subprocess
 from collections import deque
-from multiprocessing import Pool
+#from multiprocessing import Pool
 
 class chipbase_parser :
     def __init__(self) :
@@ -117,7 +117,8 @@ class async_chipbase_parser :
 
     def create_url_list(self,tf_list,experiment_id) :
         for tf in tf_list :
-            download_url = "https://rnasysu.com/chipbase3/download.php?base_page=%s&assembly=%s&protein=%s&sample_id=%s&type=protein&upstream=%s&downstream=%s&motif_status=N&Ftype=tab" % (self.page,self.assembly,tf,experiment_id,self.upstream_range,self.downstream_range)
+            #self.page,self.assembly,tf,experiment_id,self.upstream_range,self.downstream_range
+            download_url = f"https://rnasysu.com/chipbase3/download.php?base_page={self.page}&assembly={self.assembly}&protein={tf}&sample_id={experiment_id}&type=protein&upstream={self.upstream_range}&downstream={self.downstream_range}&motif_status=N&Ftype=tab" 
             self.url_list.append(download_url)
 
     async def download_process(self,session,url,output_path):
@@ -215,18 +216,19 @@ class chipbase_result_formater :
 
 def main() :
     #load requirement information
-    gene_list = pd.read_csv("coding_gene_symbol.txt",header=None)
+    gene_list = pd.read_csv("material/coding_gene_symbol.txt",header=None)
     gene_list.columns = ['Gene symbol']
-    exp_df = pd.read_excel("chipbase_experiment.xlsx")
+    exp_df = pd.read_excel("material/chipbase_experiment.xlsx")
     experiments = exp_df.ChipbaseID.values
     #load biomart information
-    biomart = pd.read_csv("biomart_v110_protein_coding_gene_information_20231201.txt",sep='\t',index_col=9,low_memory=False)
+    biomart = pd.read_csv("material/biomart_v110_protein_coding_gene_information_20231201.txt",sep='\t',index_col=9,low_memory=False)
     biomart_info = biomart.loc[:,['Gene stable ID','Chromosome/scaffold name','Gene start (bp)','Gene end (bp)','Strand']]
     biomart_dict = biomart_info.drop_duplicates().T.to_dict()
 
     #set input/output path
-    result_path = "/home/bruce1996/repo/chipbase_parser/chipbase_result/"
-    formated_path = "/home/bruce1996/repo/chipbase_parser/format_chipbase_result/"
+    result_path = "chipbase_result/"
+    os.makedirs(result_path,exist_ok=True)
+
     for idx,experiment in enumerate(experiments) :
         print("Parse chipbase information for experiment : %s at %s" % (experiment,datetime.datetime.now().strftime("%Y/%m/%d-%H:%M:%S")))
         dt = datetime.datetime.now()

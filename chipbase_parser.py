@@ -103,6 +103,7 @@ class chipbase_parser :
                     del retry_dict[target]
                 else :
                     download_list.append(target)
+            time.sleep(0.5)
 
 class async_chipbase_parser :
     def __init__(self) :
@@ -220,10 +221,6 @@ def main() :
     gene_list.columns = ['Gene symbol']
     exp_df = pd.read_excel("material/chipbase_experiment.xlsx")
     experiments = exp_df.ChipbaseID.values
-    #load biomart information
-    biomart = pd.read_csv("material/biomart_v110_protein_coding_gene_information_20231201.txt",sep='\t',index_col=9,low_memory=False)
-    biomart_info = biomart.loc[:,['Gene stable ID','Chromosome/scaffold name','Gene start (bp)','Gene end (bp)','Strand']]
-    biomart_dict = biomart_info.drop_duplicates().T.to_dict()
 
     #set input/output path
     result_path = "chipbase_result/"
@@ -263,6 +260,11 @@ def main() :
         print("Format chipbase information for experiment : %s is completed at %s" % (experiment,datetime.datetime.now().strftime("%Y/%m/%d-%H:%M:%S")))
         #format chipbase result
         '''
+         #load biomart information
+        biomart = pd.read_csv("material/biomart_v110_protein_coding_gene_information_20231201.txt",sep='\t',index_col=9,low_memory=False)
+        biomart_info = biomart.loc[:,['Gene stable ID','Chromosome/scaffold name','Gene start (bp)','Gene end (bp)','Strand']]
+        biomart_dict = biomart_info.drop_duplicates().T.to_dict()
+
         format_output_path = formated_path + experiment
         if os.path.isdir(format_output_path) == False :
             os.mkdir(format_output_path)
